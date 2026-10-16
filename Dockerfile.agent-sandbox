@@ -1,0 +1,8 @@
+# Start with a small Python image for the isolated command-running environment.
+FROM python:3.11-slim
+
+# Install Git for applying generated patches, then remove package-list files to keep the image small.
+RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
+
+# Commands inside the container run from this mounted project directory.
+WORKDIR /workspace

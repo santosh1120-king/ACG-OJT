@@ -2,6 +2,7 @@ import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+// Read the Google application ID from the frontend environment settings.
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID';
 
 export default function Login() {
@@ -9,16 +10,19 @@ export default function Login() {
   const navigate = useNavigate();
 
   const handleSuccess = async (response) => {
+    // Give Google's credential to the backend, then move the user into the app.
     try {
       await login(response.credential);
       navigate('/dashboard');
     } catch (error) {
       console.error('Login failed:', error);
-      alert('Login failed. Please try again.');
+      const detail = error.response?.data?.detail;
+      alert(detail ? `Login failed: ${detail}` : 'Login failed. Please try again.');
     }
   };
 
   const handleError = () => {
+    // Show a simple browser message when Google sign-in cannot complete.
     console.error('Google Login Failed');
     alert('Google Login Failed. Please try again.');
   };
